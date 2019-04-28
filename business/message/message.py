@@ -4,8 +4,11 @@ from rust.core import business
 
 from db.message import models as message_models
 
-class Message(business.Model):
 
+class Message(business.Model):
+	"""
+	消息
+	"""
 	__slots__ = (
 		'id',
 		'content',

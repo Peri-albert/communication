@@ -10,17 +10,22 @@ from business.message.recall_service import RecallService
 
 
 @Resource('message.message')
-class AMessage(ApiResource):
-
-	@param_required(['user', 'message_id'])
+class ARecalledMessage(ApiResource):
+	"""
+	撤回的消息
+	"""
+	@param_required(['user', 'id'])
 	def put(self):
+		"""
+		撤回消息(限本人操作)
+		"""
 		user = self.params['user']
-		param_object = ParamObject({
-			'message_id': self.params['message_id']
-		})
-		message = MessageRepository(user).get_message_by_id(param_object)
+		message = MessageRepository(user).get_message_by_id(self.params['id'])
 		if message.source_user_id != user.id:
 			raise BusinessError(u'操作无权限')
 
+		param_object = ParamObject({
+			'id': self.params['message_id']
+		})
 		RecallService(user).recall(param_object)
 		return {}

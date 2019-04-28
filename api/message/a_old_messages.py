@@ -11,9 +11,14 @@ from business.message.encode_message_service import EncodeMessageService
 
 @Resource('message.old_messages')
 class AOldMessages(ApiResource):
-
+	"""
+	旧消息列表
+	"""
 	@param_required(['user', 'source_user_id', '?page:int', '?count_per_page:int', '?filters:json'])
-	def put(self):
+	def get(self):
+		"""
+		获取历史消息
+		"""
 		user = self.params['user']
 		filters = self.params.get('filters')
 		target_page = TargetPage(self.params)

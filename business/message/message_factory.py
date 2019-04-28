@@ -7,9 +7,13 @@ from db.message import models as message_models
 
 
 class MessageFactory(business.Service):
-
+	"""
+	消息工厂
+	"""
 	def create(self, param_object):
-
+		"""
+		创建工厂
+		"""
 		db_model = message_models.Message.create(
 			source_user_id = param_object.source_user_id,
 			target_user_id=param_object.target_user_id,
@@ -17,4 +21,3 @@ class MessageFactory(business.Service):
 		)
 
 		return Message(db_model)
-

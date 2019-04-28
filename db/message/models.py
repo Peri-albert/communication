@@ -25,4 +25,3 @@ class Message(models.Model):
 
 	class Meta(object):
 		table_name = 'message_message'
-

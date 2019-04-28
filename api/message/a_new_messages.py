@@ -9,11 +9,17 @@ from business.message.message_repository import MessageRepository
 from business.message.encode_message_service import EncodeMessageService
 from business.message.read_service import ReadService
 
+
 @Resource('message.new_messages')
 class ANewMessages(ApiResource):
-
+	"""
+	新消息列表
+	"""
 	@param_required(['user', 'source_user_id', '?page:int', '?count_per_page:int', '?filters:json'])
-	def put(self):
+	def get(self):
+		"""
+		获取未读消息列表
+		"""
 		user = self.params['user']
 		filters = self.params.get('filters')
 		target_page = TargetPage(self.params)
