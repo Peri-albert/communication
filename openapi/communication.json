@@ -1,0 +1,417 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "享趣社区的社交微服务URI",
+    "url" : "{protocol}://www.mindinn.top/communication",
+    "variables" : {
+      "protocol" : {
+        "enum" : [ "http", "https" ],
+        "default" : "https"
+      }
+    }
+  } ],
+  "info" : {
+    "description" : "享趣社区的社交微服务",
+    "version" : "1.0.0",
+    "title" : "Mindinn Communication Microservice",
+    "contact" : {
+      "email" : "albertgandolf@gmail.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "管理员",
+    "description" : "限管理员权限操作"
+  }, {
+    "name" : "用户",
+    "description" : "常规操作"
+  } ],
+  "paths" : {
+    "/message/message" : {
+      "put" : {
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "tags" : [ "用户" ],
+        "summary" : "创建消息",
+        "description" : "用户创建消息\n",
+        "responses" : {
+          "200" : {
+            "description" : "发布成功",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "description" : "消息的id"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "意外的错误",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreatedMessage"
+              }
+            }
+          },
+          "description" : "用户发布动态的请求体"
+        }
+      }
+    },
+    "/message/new_messages" : {
+      "get" : {
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "tags" : [ "用户" ],
+        "summary" : "返回未读的消息列表",
+        "description" : "返回消息对象的集合\n",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "source_user_id",
+          "description" : "发布者id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "page",
+          "description" : "分页参数，总页码",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "count_per_page",
+          "description" : "分页参数，每页数目",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "filters",
+          "description" : "过滤参数",
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "返回消息对象列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "messages", "page_info" ],
+                  "properties" : {
+                    "comments" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Message"
+                      }
+                    },
+                    "page_info" : {
+                      "$ref" : "#/components/schemas/PageInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "意外的错误",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/old_messages" : {
+      "get" : {
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "tags" : [ "用户" ],
+        "summary" : "返回已读的消息列表",
+        "description" : "返回消息对象的集合\n",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "source_user_id",
+          "description" : "发布者id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "page",
+          "description" : "分页参数，总页码",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "count_per_page",
+          "description" : "分页参数，每页数目",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "filters",
+          "description" : "过滤参数",
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "返回消息对象列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "messages", "page_info" ],
+                  "properties" : {
+                    "comments" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Message"
+                      }
+                    },
+                    "page_info" : {
+                      "$ref" : "#/components/schemas/PageInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "意外的错误",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/recalled_message" : {
+      "put" : {
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "tags" : [ "用户" ],
+        "summary" : "撤回消息",
+        "description" : "撤回消息\n",
+        "responses" : {
+          "200" : {
+            "description" : "撤回成功"
+          },
+          "default" : {
+            "description" : "意外的错误",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "message_id" ],
+                "properties" : {
+                  "message_id" : {
+                    "type" : "integer"
+                  }
+                }
+              }
+            }
+          },
+          "description" : "撤回消息的请求体"
+        }
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
+    "responses" : {
+      "NotFound" : {
+        "description" : "找不到指定的资源",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized" : {
+        "description" : "访问令牌丢失或无效",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas" : {
+      "Error" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "错误代码"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "错误内容"
+          }
+        },
+        "required" : [ "code", "message" ]
+      },
+      "PageInfo" : {
+        "type" : "object",
+        "properties" : {
+          "cur_page" : {
+            "type" : "integer",
+            "description" : "当前页"
+          },
+          "count_per_page" : {
+            "type" : "integer",
+            "description" : "每页数目"
+          },
+          "total_object_count" : {
+            "type" : "integer",
+            "description" : "总对象数目"
+          },
+          "display_pages" : {
+            "type" : "integer",
+            "description" : "呈现页数"
+          },
+          "has_head" : {
+            "type" : "boolean",
+            "description" : "是否拥有头部页"
+          },
+          "has_tail" : {
+            "type" : "boolean",
+            "description" : "是否拥有尾部页"
+          },
+          "has_prev" : {
+            "type" : "boolean",
+            "description" : "是否拥有前一页"
+          },
+          "has_next" : {
+            "type" : "boolean",
+            "description" : "是否拥有后一页"
+          },
+          "prev" : {
+            "type" : "integer",
+            "description" : "前页"
+          },
+          "next" : {
+            "type" : "integer",
+            "description" : "后页"
+          },
+          "max_page" : {
+            "type" : "integer",
+            "description" : "最大页码"
+          }
+        }
+      },
+      "Message" : {
+        "type" : "object",
+        "required" : [ "id", "content", "source_user_id", "target_user_id", "tag" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "source_user_id" : {
+            "type" : "integer"
+          },
+          "target_user_id" : {
+            "type" : "integer"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "tag" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CreatedMessage" : {
+        "type" : "object",
+        "required" : [ "id", "content", "target_user_id" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "target_user_id" : {
+            "type" : "integer"
+          },
+          "content" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
